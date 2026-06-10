@@ -1,0 +1,49 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 5);
+---
+
+<BlogLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <section class="hero">
+    <h1>CrossBorder SaaS</h1>
+    <p>
+      Strategies and tactics for Chinese SaaS companies expanding to global
+      markets — product localization, growth marketing, and cross-border
+      operations.
+    </p>
+  </section>
+
+  <h2>Latest Articles</h2>
+  {posts.length === 0 && <p>No articles published yet. Check back soon.</p>}
+  <ul class="blog-list">
+    {posts.map((post) => {
+      const slug = post.id.replace(/\.md$/, "");
+      return (
+        <li>
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </time>
+          <h2>
+            <a href={`/blog/${slug}`}>{post.data.title}</a>
+          </h2>
+          <p class="excerpt">{post.data.description}</p>
+          <div class="tags">
+            {post.data.tags.map((tag) => (
+              <a class="tag" href={`/blog?tag=${tag}`}>{tag}</a>
+            ))}
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+</BlogLayout>

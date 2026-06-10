@@ -1,0 +1,40 @@
+---
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
+posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+---
+
+<BlogLayout title="Blog" description={`Articles about cross-border SaaS growth — ${SITE_DESCRIPTION}`}>
+  <h1>All Articles</h1>
+
+  {posts.length === 0 && <p>No articles published yet. Check back soon.</p>}
+
+  <ul class="blog-list">
+    {posts.map((post) => {
+      const slug = post.id.replace(/\.md$/, "");
+      return (
+        <li>
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </time>
+          <h2>
+            <a href={`/blog/${slug}`}>{post.data.title}</a>
+          </h2>
+          <p class="excerpt">{post.data.description}</p>
+          <div class="tags">
+            {post.data.tags.map((tag) => (
+              <a class="tag" href={`/blog?tag=${tag}`}>{tag}</a>
+            ))}
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+</BlogLayout>
