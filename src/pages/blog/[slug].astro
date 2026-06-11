@@ -12,12 +12,18 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const slug = post.id.replace(/\.md$/, "");
 ---
 
 <BlogLayout
   title={post.data.title}
   description={post.data.description}
   ogType="article"
+  pubDate={post.data.pubDate}
+  tags={post.data.tags}
+  canonical={
+    post.data.canonicalURL ?? undefined
+  }
 >
   <article>
     <header>
@@ -29,6 +35,15 @@ const { Content } = await render(post);
           day: "numeric",
         })}
       </time>
+      {post.data.updatedDate && (
+        <p class="updated">
+          Updated: {post.data.updatedDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </p>
+      )}
       <div class="tags">
         {post.data.tags.map((tag) => (
           <span class="tag">{tag}</span>

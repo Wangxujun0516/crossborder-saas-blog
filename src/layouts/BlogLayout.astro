@@ -1,11 +1,12 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import type { Props as BaseProps } from "./BaseLayout.astro";
-import { SITE_TITLE, SITE_DESCRIPTION, BASE_URL } from "../consts";
+import { SITE_TITLE } from "../consts";
 
 export interface Props extends BaseProps {}
 
-const { title, description, ogType, canonical } = Astro.props;
+const { title, description, ogType, canonical, ogImage, pubDate, tags, author } =
+  Astro.props;
 ---
 
 <BaseLayout
@@ -13,6 +14,10 @@ const { title, description, ogType, canonical } = Astro.props;
   description={description}
   ogType={ogType}
   canonical={canonical}
+  ogImage={ogImage}
+  pubDate={pubDate}
+  tags={tags}
+  author={author}
 >
   <header>
     <nav>

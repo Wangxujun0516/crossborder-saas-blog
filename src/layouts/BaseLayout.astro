@@ -1,12 +1,35 @@
 ---
+import { SITE_DESCRIPTION } from "../consts";
+
 export interface Props {
   title: string;
   description: string;
   ogType?: string;
   canonical?: string;
+  ogImage?: string;
+  pubDate?: Date;
+  tags?: string[];
+  author?: string;
 }
 
-const { title, description, ogType = "website", canonical } = Astro.props;
+const {
+  title,
+  description,
+  ogType = "website",
+  canonical,
+  ogImage = "/default-og.png",
+  pubDate,
+  tags = [],
+  author = "CrossBorder SaaS",
+} = Astro.props;
+
+const pageUrl = canonical ?? Astro.url;
+const pageUrlStr =
+  typeof pageUrl === "string" ? pageUrl : pageUrl?.toString() ?? "/";
+const origin =
+  typeof pageUrl === "string"
+    ? new URL(pageUrl).origin
+    : pageUrl?.origin ?? "https://crossbordersaas.com";
 ---
 
 <!doctype html>
@@ -15,19 +38,63 @@ const { title, description, ogType = "website", canonical } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={pageUrlStr} />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={Astro.url} />
+    <meta property="og:url" content={pageUrlStr} />
+    <meta property="og:image" content={`${origin}${ogImage}`} />
+    <meta property="og:site_name" content="CrossBorder SaaS" />
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {canonical && <link rel="canonical" href={canonical} />}
+    <meta name="twitter:image" content={`${origin}${ogImage}`} />
+
+    <!-- RSS discovery link -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="CrossBorder SaaS RSS"
+      href="/rss.xml"
+    />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
     <slot />
+
+    <!-- JSON-LD Structured Data -->
+    {ogType === "article" ? (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description,
+        datePublished: pubDate?.toISOString(),
+        author: { "@type": "Person", name: author },
+        publisher: {
+          "@type": "Organization",
+          name: "CrossBorder SaaS",
+        },
+        mainEntityOfPage: { "@type": "WebPage", "@id": pageUrlStr },
+        keywords: tags.join(", "),
+      })} />
+    ) : (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "CrossBorder SaaS",
+        url: origin,
+        description: SITE_DESCRIPTION,
+      })} />
+    )}
   </body>
 </html>
