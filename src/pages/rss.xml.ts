@@ -20,7 +20,7 @@ export async function GET() {
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
-      link: `/blog/${post.id.replace(/\.md$/, "")}/`,
+      link: `/blog/${post.id.replace(/\.md$/, "")}`,
       content: post.body,
       categories: post.data.tags,
     })),

@@ -2,9 +2,10 @@
 import { getCollection, render } from "astro:content";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import PostCard from "../../components/PostCard.astro";
+import { BASE_URL } from "../../consts";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
+  const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
   return posts.map((post) => ({
     params: { slug: post.id.replace(/\.md$/, "") },
     props: { post },
@@ -13,6 +14,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
+const slug = post.id.replace(/\.md$/, "");
+const canonical =
+  post.data.canonicalURL ?? `${BASE_URL}/blog/${slug}`;
 
 const allPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft && p.id !== post.id)
@@ -96,6 +100,11 @@ const toc = headings.filter(h => h.depth >= 2 && h.depth <= 3);
   title={post.data.title}
   description={post.data.description}
   ogType="article"
+  canonical={canonical}
+  ogImage={post.data.image ?? "/default-og.png"}
+  pubDate={post.data.pubDate}
+  tags={post.data.tags}
+  author="CrossBorder SaaS Team"
 >
   <article class="py-12 lg:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

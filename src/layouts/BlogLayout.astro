@@ -7,7 +7,16 @@ import Footer from "../components/Footer.astro";
 
 export interface Props extends BaseProps {}
 
-const { title, description, ogType, canonical } = Astro.props;
+const {
+  title,
+  description,
+  ogType,
+  canonical,
+  ogImage,
+  pubDate,
+  tags,
+  author,
+} = Astro.props;
 ---
 
 <BaseLayout
@@ -15,6 +24,10 @@ const { title, description, ogType, canonical } = Astro.props;
   description={description}
   ogType={ogType}
   canonical={canonical}
+  ogImage={ogImage}
+  pubDate={pubDate}
+  tags={tags}
+  author={author}
 >
   <Header />
   
