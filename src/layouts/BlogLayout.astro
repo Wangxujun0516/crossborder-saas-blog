@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import type { Props as BaseProps } from "./BaseLayout.astro";
-import { SITE_TITLE } from "../consts";
+import { SITE_TITLE, SITE_DESCRIPTION, BASE_URL } from "../consts";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 export interface Props extends BaseProps {}
 
-const { title, description, ogType, canonical, ogImage, pubDate, tags, author } =
-  Astro.props;
+const { title, description, ogType, canonical } = Astro.props;
 ---
 
 <BaseLayout
@@ -14,75 +15,12 @@ const { title, description, ogType, canonical, ogImage, pubDate, tags, author } 
   description={description}
   ogType={ogType}
   canonical={canonical}
-  ogImage={ogImage}
-  pubDate={pubDate}
-  tags={tags}
-  author={author}
 >
-  <header>
-    <nav>
-      <a href="/" class="logo">{SITE_TITLE}</a>
-      <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/blog">Blog</a>
-      </div>
-    </nav>
-  </header>
-
-  <main>
+  <Header />
+  
+  <main class="min-h-screen bg-bg-secondary pt-20 lg:pt-24">
     <slot />
   </main>
-
-  <footer>
-    <p>&copy; {new Date().getFullYear()} {SITE_TITLE}. All rights reserved.</p>
-  </footer>
+  
+  <Footer />
 </BaseLayout>
-
-<style>
-  header {
-    border-bottom: 1px solid #e5e7eb;
-    padding: 1rem 0;
-    margin-bottom: 2rem;
-  }
-  nav {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .logo {
-    font-weight: 700;
-    font-size: 1.125rem;
-    color: #111827;
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-  }
-  .nav-links a {
-    color: #4b5563;
-    text-decoration: none;
-    font-size: 0.938rem;
-  }
-  .nav-links a:hover {
-    color: #111827;
-  }
-  main {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    min-height: 70vh;
-  }
-  footer {
-    max-width: 720px;
-    margin: 4rem auto 0;
-    padding: 2rem 1rem;
-    border-top: 1px solid #e5e7eb;
-    text-align: center;
-    color: #6b7280;
-    font-size: 0.875rem;
-  }
-</style>

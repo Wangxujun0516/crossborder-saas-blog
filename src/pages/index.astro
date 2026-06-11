@@ -2,51 +2,196 @@
 import BlogLayout from "../layouts/BlogLayout.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import { getCollection } from "astro:content";
+import PostCard from "../components/PostCard.astro";
 
 const posts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-  .slice(0, 5);
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const featuredPost = posts[0];
+const latestPosts = posts.slice(1, 7);
+
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags))];
+const popularTags = allTags.slice(0, 8);
 ---
 
-<BlogLayout
-  title="China SaaS Cross-Border Insights — Best Practices, Tools & Case Studies"
-  description={SITE_DESCRIPTION}
->
-  <section class="hero">
-    <h1>CrossBorder SaaS</h1>
-    <p>
-      Strategies and tactics for Chinese SaaS companies expanding to global
-      markets — product localization, growth marketing, and cross-border
-      operations.
-    </p>
+<BlogLayout title="Home" description={SITE_DESCRIPTION}>
+  <section class="bg-gradient-to-br from-primary/5 via-bg to-accent/5 py-16 lg:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          China SaaS Global Expansion
+        </div>
+        
+        <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold text-text leading-tight mb-6 text-balance">
+          China SaaS
+          <span class="block text-primary">Cross-Border Insights</span>
+        </h1>
+        
+        <p class="text-lg lg:text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
+          Actionable strategies for Chinese SaaS companies expanding to global markets — product localization, growth marketing, and cross-border operations.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/blog"
+            class="inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            Browse Articles
+          </a>
+          <a
+            href="#topics"
+            class="inline-flex items-center justify-center px-6 py-3 bg-white border border-border hover:border-primary text-text font-medium rounded-lg transition-all duration-200"
+          >
+            Explore Topics
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <h2>Latest Articles</h2>
-  {posts.length === 0 && <p>No articles published yet. Check back soon.</p>}
-  <ul class="blog-list">
-    {posts.map((post) => {
-      const slug = post.id.replace(/\.md$/, "");
-      return (
-        <li>
-          <time datetime={post.data.pubDate.toISOString()}>
-            {post.data.pubDate.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
-          <h2>
-            <a href={`/blog/${slug}`}>{post.data.title}</a>
-          </h2>
-          <p class="excerpt">{post.data.description}</p>
-          <div class="tags">
-            {post.data.tags.map((tag) => (
-              <a class="tag" href={`/blog?tag=${tag}`}>{tag}</a>
-            ))}
+  <section class="py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {featuredPost && (
+        <article class="group bg-white rounded-2xl border border-border overflow-hidden hover:shadow-xl transition-all duration-300">
+          <div class="grid md:grid-cols-2 gap-0">
+            <div class="relative h-64 md:h-auto">
+              <img
+                src={featuredPost.data.image || "https://neeko-copilot.bytedance.net/api/text_to_image?prompt=saas%20business%20expansion%20global%20strategy&image_size=landscape_16_9"}
+                alt={featuredPost.data.title}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div class="absolute bottom-4 left-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-accent text-white text-xs font-medium">
+                  Featured
+                </span>
+              </div>
+            </div>
+            
+            <div class="p-6 lg:p-8 flex flex-col justify-center">
+              <div class="flex items-center gap-2 mb-4">
+                {featuredPost.data.tags.slice(0, 2).map((tag) => (
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-bg-tertiary text-text-secondary">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              
+              <h2 class="text-2xl lg:text-3xl font-bold text-text mb-4 group-hover:text-primary transition-colors">
+                <a href={`/blog/${featuredPost.id.replace(/\.md$/, "")}`}>
+                  {featuredPost.data.title}
+                </a>
+              </h2>
+              
+              <p class="text-text-secondary mb-6 line-clamp-2">
+                {featuredPost.data.description}
+              </p>
+              
+              <div class="flex items-center justify-between">
+                <time datetime={featuredPost.data.pubDate.toISOString()} class="text-text-muted text-sm">
+                  {featuredPost.data.pubDate.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <a
+                  href={`/blog/${featuredPost.id.replace(/\.md$/, "")}`}
+                  class="inline-flex items-center text-primary hover:text-primary-hover font-medium text-sm transition-colors"
+                >
+                  Read full article
+                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
-        </li>
-      );
-    })}
-  </ul>
+        </article>
+      )}
+    </div>
+  </section>
+
+  <section id="topics" class="py-8 lg:py-12 bg-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-text">Popular Topics</h2>
+        <a href="/blog" class="text-primary hover:text-primary-hover text-sm font-medium">
+          View all →
+        </a>
+      </div>
+      
+      <div class="flex flex-wrap gap-3">
+        {popularTags.map((tag) => (
+          <a
+            href={`/blog?tag=${tag}`}
+            class="inline-flex items-center px-4 py-2 rounded-full bg-bg-tertiary hover:bg-primary hover:text-white text-text-secondary transition-all duration-200"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-bold text-text mb-2">Latest Articles</h2>
+          <p class="text-text-secondary">Fresh insights on China SaaS going global</p>
+        </div>
+        <a href="/blog" class="inline-flex items-center text-primary hover:text-primary-hover font-medium">
+          See all articles
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {latestPosts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-gradient-to-r from-primary to-primary-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl lg:text-3xl font-bold text-white mb-4">
+          Stay Updated on China SaaS Trends
+        </h2>
+        <p class="text-white/80 mb-8">
+          Get weekly insights on cross-border expansion, localization strategies, and global growth tactics.
+        </p>
+        
+        <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+          />
+          <button
+            type="submit"
+            class="px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-white/90 transition-colors"
+          >
+            Subscribe
+          </button>
+        </form>
+        
+        <p class="text-white/60 text-sm mt-4">
+          No spam. Unsubscribe anytime.
+        </p>
+      </div>
+    </div>
+  </section>
 </BlogLayout>

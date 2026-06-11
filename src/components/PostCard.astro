@@ -1,0 +1,76 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+  post: CollectionEntry<"blog">;
+  size?: "small" | "medium" | "large";
+}
+
+const { post, size = "medium" } = Astro.props;
+const slug = post.id.replace(/\.md$/, "");
+
+const sizeClasses = {
+  small: "col-span-1",
+  medium: "col-span-1 md:col-span-1 lg:col-span-1",
+  large: "col-span-1 md:col-span-2 lg:col-span-2",
+};
+
+const imageClasses = {
+  small: "h-40",
+  medium: "h-48",
+  large: "h-64",
+};
+
+const titleClasses = {
+  small: "text-lg line-clamp-2",
+  medium: "text-xl line-clamp-2",
+  large: "text-2xl line-clamp-3",
+};
+---
+
+<article class={`group ${sizeClasses[size]} bg-white rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+  <a href={`/blog/${slug}`} class="block h-full">
+    <div class={`relative overflow-hidden ${imageClasses[size]}`}>
+      <img
+        src={post.data.image || "https://neeko-copilot.bytedance.net/api/text_to_image?prompt=saas%20business%20growth%20abstract%20blue%20gradient&image_size=landscape_16_9"}
+        alt={post.data.title}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+    </div>
+    
+    <div class="p-5 lg:p-6">
+      <div class="flex items-center gap-2 mb-3">
+        {post.data.tags.slice(0, 3).map((tag) => (
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-bg-tertiary text-text-secondary hover:bg-primary hover:text-white transition-colors cursor-pointer">
+            {tag}
+          </span>
+        ))}
+      </div>
+      
+      <h2 class={`font-bold text-text ${titleClasses[size]} mb-3 group-hover:text-primary transition-colors line-clamp-2`}>
+        {post.data.title}
+      </h2>
+      
+      <p class="text-text-secondary text-sm mb-4 line-clamp-2">
+        {post.data.description}
+      </p>
+      
+      <div class="flex items-center justify-between text-sm text-text-muted">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </time>
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          5 min read
+        </span>
+      </div>
+    </div>
+  </a>
+</article>

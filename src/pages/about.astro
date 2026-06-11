@@ -1,0 +1,79 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+import { SITE_DESCRIPTION } from "../consts";
+---
+
+<BlogLayout title="About" description={SITE_DESCRIPTION}>
+  <section class="py-12 lg:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="text-3xl lg:text-4xl font-bold text-text mb-4">About CrossBorder SaaS</h1>
+        <p class="text-text-secondary text-lg">
+          Your trusted resource for Chinese SaaS companies expanding to global markets
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-border p-8 mb-8">
+        <h2 class="text-2xl font-bold text-text mb-6">Our Mission</h2>
+        <p class="text-text-secondary mb-6">
+          China's SaaS ecosystem has matured significantly in recent years. Companies like ByteDance (飞书), Alibaba (DingTalk), and dozens of emerging startups have built world-class products. Yet most struggle with international expansion — not because of product quality, but because of go-to-market blind spots.
+        </p>
+        <p class="text-text-secondary">
+          <strong>CrossBorder SaaS</strong> bridges that gap. We provide actionable insights, proven strategies, and real-world case studies to help Chinese SaaS founders navigate the complexities of global expansion.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl border border-border p-6 text-center">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text mb-2">Product Localization</h3>
+          <p class="text-text-secondary text-sm">Adapting UX, pricing, and compliance for Western markets</p>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-border p-6 text-center">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text mb-2">Growth Marketing</h3>
+          <p class="text-text-secondary text-sm">SEO, content marketing, and paid acquisition for B2B SaaS</p>
+        </div>
+        
+        <div class="bg-white rounded-xl border border-border p-6 text-center">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-text mb-2">Operations</h3>
+          <p class="text-text-secondary text-sm">跨境支付, entity setup, tax compliance, and hiring abroad</p>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8">
+        <h2 class="text-2xl font-bold text-text mb-4">Join Our Community</h2>
+        <p class="text-text-secondary mb-6">
+          Subscribe to our newsletter for weekly insights on China SaaS expansion delivered to your inbox.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-md">
+          <input
+            type="email"
+            placeholder="your@email.com"
+            class="flex-1 px-4 py-3 rounded-lg bg-white border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+          />
+          <button
+            type="submit"
+            class="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors"
+          >
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BlogLayout>

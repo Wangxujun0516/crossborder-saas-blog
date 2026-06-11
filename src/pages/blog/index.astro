@@ -1,40 +1,147 @@
 ---
-import BlogLayout from "../../layouts/BlogLayout.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import PostCard from "../../components/PostCard.astro";
 
-const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
-posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags))];
 ---
 
-<BlogLayout title="Blog" description={`Articles about cross-border SaaS growth — ${SITE_DESCRIPTION}`}>
-  <h1>All Articles</h1>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.querySelector('[data-search-input]');
+    const tagButtons = document.querySelectorAll('[data-tag-button]');
+    const articles = document.querySelectorAll('[data-article]');
+    
+    let activeTag = null;
+    
+    tagButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tag = button.getAttribute('data-tag');
+        
+        if (activeTag === tag) {
+          activeTag = null;
+          button.classList.remove('bg-primary', 'text-white');
+          button.classList.add('bg-bg-tertiary', 'text-text-secondary');
+        } else {
+          activeTag = tag;
+          tagButtons.forEach(btn => {
+            btn.classList.remove('bg-primary', 'text-white');
+            btn.classList.add('bg-bg-tertiary', 'text-text-secondary');
+          });
+          button.classList.remove('bg-bg-tertiary', 'text-text-secondary');
+          button.classList.add('bg-primary', 'text-white');
+        }
+        
+        filterArticles();
+      });
+    });
+    
+    searchInput?.addEventListener('input', () => {
+      filterArticles();
+    });
+    
+    function filterArticles() {
+      const searchQuery = searchInput?.value.toLowerCase() || '';
+      
+      articles.forEach(article => {
+        const title = article.getAttribute('data-title')?.toLowerCase() || '';
+        const description = article.getAttribute('data-description')?.toLowerCase() || '';
+        const tags = article.getAttribute('data-tags')?.toLowerCase() || '';
+        const articleTags = article.getAttribute('data-tags-raw')?.split(',') || [];
+        
+        const matchesSearch = title.includes(searchQuery) || 
+                            description.includes(searchQuery) || 
+                            tags.includes(searchQuery);
+        const matchesTag = !activeTag || articleTags.includes(activeTag);
+        
+        if (matchesSearch && matchesTag) {
+          article.classList.remove('hidden');
+        } else {
+          article.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>
 
-  {posts.length === 0 && <p>No articles published yet. Check back soon.</p>}
-
-  <ul class="blog-list">
-    {posts.map((post) => {
-      const slug = post.id.replace(/\.md$/, "");
-      return (
-        <li>
-          <time datetime={post.data.pubDate.toISOString()}>
-            {post.data.pubDate.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
-          <h2>
-            <a href={`/blog/${slug}`}>{post.data.title}</a>
-          </h2>
-          <p class="excerpt">{post.data.description}</p>
-          <div class="tags">
-            {post.data.tags.map((tag) => (
-              <a class="tag" href={`/blog?tag=${tag}`}>{tag}</a>
-            ))}
-          </div>
-        </li>
-      );
-    })}
-  </ul>
+<BlogLayout 
+  title="Blog" 
+  description="All articles about Chinese SaaS companies expanding to global markets"
+>
+  <section class="py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center mb-10">
+        <h1 class="text-3xl lg:text-4xl font-bold text-text mb-4">
+          All Articles
+        </h1>
+        <p class="text-text-secondary">
+          Browse our collection of insights on China SaaS cross-border expansion
+        </p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto mb-10">
+        <div class="relative">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            data-search-input
+            type="text"
+            placeholder="Search articles..."
+            class="w-full pl-12 pr-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          />
+        </div>
+      </div>
+      
+      <div class="flex flex-wrap justify-center gap-2 mb-10">
+        <button
+          data-tag-button
+          data-tag=""
+          class="px-4 py-2 rounded-full bg-primary text-white text-sm font-medium"
+        >
+          All Posts
+        </button>
+        {allTags.map((tag) => (
+          <button
+            data-tag-button
+            data-tag={tag}
+            class="px-4 py-2 rounded-full bg-bg-tertiary text-text-secondary text-sm font-medium hover:bg-primary hover:text-white transition-all"
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => {
+          const slug = post.id.replace(/\.md$/, "");
+          return (
+            <div
+              data-article
+              data-title={post.data.title}
+              data-description={post.data.description}
+              data-tags={post.data.tags.join(' ')}
+              data-tags-raw={post.data.tags.join(',')}
+            >
+              <PostCard post={post} />
+            </div>
+          );
+        })}
+      </div>
+      
+      {posts.length === 0 && (
+        <div class="text-center py-16">
+          <svg class="w-16 h-16 mx-auto text-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-xl font-semibold text-text mb-2">No articles found</h3>
+          <p class="text-text-secondary">Try adjusting your search or filter</p>
+        </div>
+      )}
+    </div>
+  </section>
 </BlogLayout>
