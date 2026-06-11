@@ -1,5 +1,6 @@
 ---
 import { SITE_DESCRIPTION } from "../consts";
+import "../styles/global.css";
 
 export interface Props {
   title: string;
@@ -66,7 +67,6 @@ const origin =
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
     <slot />
