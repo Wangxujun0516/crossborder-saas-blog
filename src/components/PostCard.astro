@@ -28,12 +28,15 @@ const titleClasses = {
 };
 ---
 
-<article class={`group ${sizeClasses[size]} bg-white rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
+<article class={`group bg-white rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}>
   <a href={`/blog/${slug}`} class="block h-full">
     <div class={`relative overflow-hidden ${imageClasses[size]}`}>
       <img
-        src={post.data.image || "https://neeko-copilot.bytedance.net/api/text_to_image?prompt=saas%20business%20growth%20abstract%20blue%20gradient&image_size=landscape_16_9"}
+        src={post.data.image || "https://neeko-copilot.bytedance.net/api/text_to_image?prompt=saas%20business%20growth%20abstract%20blue%20gradient&image_size=medium"}
         alt={post.data.title}
+        width={size === 'large' ? 800 : 400}
+        height={size === 'large' ? 400 : 225}
+        loading="lazy"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
