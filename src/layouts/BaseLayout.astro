@@ -1,5 +1,5 @@
 ---
-import { SITE_DESCRIPTION } from "../consts";
+import { SITE_DESCRIPTION, BASE_URL } from "../consts";
 import "../styles/global.css";
 
 export interface Props {
@@ -30,7 +30,7 @@ const pageUrlStr =
 const origin =
   typeof pageUrl === "string"
     ? new URL(pageUrl).origin
-    : pageUrl?.origin ?? "https://crossbordersaas.com";
+    : pageUrl?.origin ?? BASE_URL;
 ---
 
 <!doctype html>
