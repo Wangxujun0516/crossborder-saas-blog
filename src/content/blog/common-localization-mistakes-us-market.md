@@ -25,6 +25,20 @@ Common errors include:
 
 **Real-World Example:** A European CRM provider launched in the US with untranslated "enterprise-grade" messaging that felt cold and bureaucratic. Their initial CAC ballooned to $487 per qualified lead compared to $162 in their home market. After a full cultural rewrite emphasizing "effortless scaling" and "revenue velocity," conversions improved by 64% within one quarter.
 
+<figure class="my-8 mx-auto max-w-4xl">
+  <img 
+    src="/images/us-market-localization-infographic.png" 
+    alt="US Market Localization Infographic - Key statistics and data visualization showing localization challenges and success metrics for international SaaS companies entering the US market"
+    title="US Market Localization Data Infographic"
+    loading="lazy"
+    decoding="async"
+    class="w-full h-auto rounded-xl shadow-lg"
+  />
+  <figcaption class="mt-4 text-center text-sm text-gray-500 italic">
+    Data sources: Gartner 2025 SaaS Trends Report, Stripe Global Payments Report 2025, OpenView SaaS Benchmarks
+  </figcaption>
+</figure>
+
 ## 2. Payment and Pricing Localization Failures
 
 US customers have high expectations around billing flexibility, transparent pricing, and trusted payment methods.
